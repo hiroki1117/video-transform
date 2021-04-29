@@ -22,10 +22,11 @@ TRIM_FILENAME="trimtemp.mp4"
 # 動画のトリミング
 ffmpeg -ss "${SS}" -i ${DL_FILENAME} -t "${DURATION}" -vcodec libx264 "${TRIM_FILENAME}"
 
+FADE_FILENAME
 # フェードアウト処理
 if [ $FADEOUT = "true" ]; then
     FADE_FILENAME="fadetemp.mp4"
-    ffmpeg -i "${TRIM_FILENAME}" -vf "fade=d=1.5,reverse,fade=d=1.5,reverse" -af "afade=t=in:st=0:d=2.5,areverse,afade=t=in:st=0:d=2.5,areverse" -vcodec libx264 "${FADE_FILENAME}"
+    ffmpeg -i "${TRIM_FILENAME}" -vf "fade=d=1.2,reverse,fade=d=1.2,reverse" -af "afade=t=in:st=0:d=2,areverse,afade=t=in:st=0:d=2,areverse" -vcodec libx264 "${FADE_FILENAME}"
 fi
 
 LAST_FINENAME=${FADE_FILENAME-${TRIM_FILENAME}}
