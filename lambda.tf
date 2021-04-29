@@ -12,7 +12,7 @@ resource "aws_lambda_function" "video_cut_submitjob_lambda" {
     variables = {
       VIDEO_TRANSFORM_S3BACKET = var.video_transform_s3_backet
       VIDEO_TRANSFORM_JOB_QUEUE = "video-transform-batch-queue"
-      VIDEO_TRANSFORM_JOB_DEFINITION = "video-cut-job-definition:2"
+      VIDEO_TRANSFORM_JOB_DEFINITION = "video-cut-job-definition:3"
     }
   }
 
