@@ -3,6 +3,10 @@ variable "video_transform_s3_backet" {
   default = "video-transform-hiroki1117"
 }
 
+variable "youtube_dl_endpoint" {
+  type    = string
+}
+
 variable "vpc_name" {
   type        = string
   default     = "video-transform-vpc"
