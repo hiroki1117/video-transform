@@ -15,7 +15,7 @@
   },
   "memory": 512,
   "vcpus": 1,
-  "command" : ["bash","main.sh"],
+  "command" : ["bash","main.sh", "Ref::inputs3url", "Ref::dist3url", "Ref::ss", "Ref::duration", "Ref::fadeout"],
   "type": "container",
   "environment": [],
   "mountPoints": [],
