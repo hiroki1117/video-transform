@@ -39,7 +39,7 @@ def lambda_handler(event, context):
     # AWS Batchで動画保存処理
     batch_client = BatchClient()    
     batch_job_id = batch_client.submit_job(url, dists3url, ss, duration, fadeout, youtube_dl_batch_job_id if is_youtube_dl_req else None)["jobId"]
-     
+    
     response = {
         "statusCode": 200,
         "body": json.dumps({

@@ -22,7 +22,7 @@ TRIM_FILENAME="trimtemp.mp4"
 # 動画のトリミング
 ffmpeg -ss "${SS}" -i ${DL_FILENAME} -t "${DURATION}" -vcodec libx264 "${TRIM_FILENAME}"
 
-FADE_FILENAME
+export FADE_FILENAME
 # フェードアウト処理
 if [ $FADEOUT = "true" ]; then
     FADE_FILENAME="fadetemp.mp4"
