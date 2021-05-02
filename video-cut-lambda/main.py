@@ -62,6 +62,7 @@ class BatchClient:
         self.client = boto3.client("batch")
         self.job_queue = os.environ['VIDEO_TRANSFORM_JOB_QUEUE']
         self.job_definition = os.environ['VIDEO_TRANSFORM_JOB_DEFINITION']
+        self.job_revision = os.environ['VIDEO_TRANSFORM_JOB_REVISION']
         self.jobname = "videotransform-job-from-lambda"
 
     def submit_job(self, url, dists3url, ss, duration, fadeout, youtubedl_batch_job_id):
@@ -84,7 +85,7 @@ class BatchClient:
         return self.client.submit_job(
             jobName=self.jobname,
             jobQueue=self.job_queue,
-            jobDefinition=self.job_definition,
+            jobDefinition=self.job_definition + ":" + self.job_revision,
             parameters=parameters,
             dependsOn=[] if not youtubedl_batch_job_id else dependsOn
         )

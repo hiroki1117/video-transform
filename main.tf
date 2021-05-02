@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 0.14"
+  required_version = "~> 0.15"
   backend "s3" {
     bucket = "hiroki1117-tf-state"
     key    = "video_transform"
@@ -83,7 +83,7 @@ resource "aws_batch_compute_environment" "video_transform_batch" {
 
 #ジョブキューの用意
 resource "aws_batch_job_queue" "video_transform_batch_queue" {
-  name                 = "video-transform-batch-queue"
+  name                 = var.video_cut_job_queue_name
   state                = "ENABLED"
   priority             = 1
   compute_environments = [aws_batch_compute_environment.video_transform_batch.arn]
@@ -92,10 +92,11 @@ resource "aws_batch_job_queue" "video_transform_batch_queue" {
   }
 }
 
-#ジョブ定義
-resource "aws_batch_job_definition" "video_cut_job_definition" {
-  name = "video-cut-job-definition"
-  type = "container"
+module "video_cut_job_definition" {
+  source = "./modules/batch_job_modules"
+  job_name = var.video_cut_job_defination_name
+  job_log_group_name = var.video_cut_job_log_group_name
+  job_ecr_name = "video-cut"
   container_properties = templatefile("./video_cut_batch_container_definitions.tpl",
     {
       job_role_arn = module.iam_assumable_role_for_video_transform_batchjob.iam_role_arn,
@@ -104,20 +105,32 @@ resource "aws_batch_job_definition" "video_cut_job_definition" {
   )
 }
 
-#ジョブのロググループ
-resource "aws_cloudwatch_log_group" "video_cut_job_log_group" {
-  name = var.video_cut_job_log_group_name
-}
+#videocutジョブ定義
+# resource "aws_batch_job_definition" "video_cut_job_definition" {
+#   name = "video-cut-job-definition"
+#   type = "container"
+#   container_properties = templatefile("./video_cut_batch_container_definitions.tpl",
+#     {
+#       job_role_arn = module.iam_assumable_role_for_video_transform_batchjob.iam_role_arn,
+#       log_group = var.video_cut_job_log_group_name
+#     }
+#   )
+# }
 
-#ECR
-resource "aws_ecr_repository" "video_cut_registory" {
-  name                 = "video-cut"
-  image_tag_mutability = "MUTABLE"
+#videocutジョブのロググループ
+# resource "aws_cloudwatch_log_group" "video_cut_job_log_group" {
+#   name = var.video_cut_job_log_group_name
+# }
 
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
+#videocut ECR
+# resource "aws_ecr_repository" "video_cut_registory" {
+#   name                 = "video-cut"
+#   image_tag_mutability = "MUTABLE"
+
+#   image_scanning_configuration {
+#     scan_on_push = true
+#   }
+# }
 
 #AWS Batchサービスロール
 module "iam_assumable_role_for_aws_batch_service" {

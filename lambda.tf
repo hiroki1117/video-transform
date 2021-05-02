@@ -11,8 +11,9 @@ resource "aws_lambda_function" "video_cut_submitjob_lambda" {
   environment {
     variables = {
       VIDEO_TRANSFORM_S3BACKET = var.video_transform_s3_backet
-      VIDEO_TRANSFORM_JOB_QUEUE = "video-transform-batch-queue"
-      VIDEO_TRANSFORM_JOB_DEFINITION = "video-cut-job-definition:3"
+      VIDEO_TRANSFORM_JOB_QUEUE = var.video_cut_job_queue_name
+      VIDEO_TRANSFORM_JOB_DEFINITION = var.video_cut_job_defination_name
+      VIDEO_TRANSFORM_JOB_REVISION = module.video_cut_job_definition.job_revision
       YOUTUBE_DL_ENDPOINT = var.youtube_dl_endpoint
     }
   }
