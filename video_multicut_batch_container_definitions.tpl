@@ -1,7 +1,7 @@
 
 {
   "jobDefinitionName": "video-cut-job-definition",
-  "image": "103933412310.dkr.ecr.ap-northeast-1.amazonaws.com/video-multi-cut:v1:v1",
+  "image": "103933412310.dkr.ecr.ap-northeast-1.amazonaws.com/video-multi-cut:v2",
   "executionRoleArn": "arn:aws:iam::103933412310:role/ecsTaskExecutionRole",
   "jobRoleArn": "${job_role_arn}",
   "logConfiguration": {

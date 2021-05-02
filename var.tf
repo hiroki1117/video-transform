@@ -61,10 +61,12 @@ variable "instance_settings" {
   }
 }
 
-variable "video_cut_job_queue_name" {
+variable "video_transform_job_queue_name" {
   type = string
   default = "video-transform-batch-queue"
 }
+
+# JobDefinition
  variable "video_cut_job_defination_name" {
    type = string
    default = "video-cut-job-definition"
@@ -73,4 +75,14 @@ variable "video_cut_job_queue_name" {
 variable "video_cut_job_log_group_name" {
   type    = string
   default = "/aws/batch/video-cut"
+}
+
+ variable "video_multicut_job_defination_name" {
+   type = string
+   default = "video-multicut-job-definition"
+ }
+
+variable "video_multicut_job_log_group_name" {
+  type    = string
+  default = "/aws/batch/video-multicut"
 }

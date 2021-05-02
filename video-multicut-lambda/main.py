@@ -53,10 +53,10 @@ def lambda_handler(event, context):
     return response
 
 # S3のファイルパスを作成
-def generate_s3_path(base_s3_backet):
+def generate_s3_path(base_s3_backet, sufix):
     # 保存先S3パスを生成
     day = datetime.date.today()
-    return dists3url = f's3://{base_s3_backet}/{day.year}/{day.month}/{day.day}/{str(uuid.uuid4())}.mp4'
+    return f's3://{base_s3_backet}/{day.year}/{day.month}/{day.day}/{str(uuid.uuid4())}.' + sufix
 
 # S3へバッチ指示書をアップロード
 # 形式
@@ -69,14 +69,18 @@ def create_instruction_s3(trim_array, s3backet):
     tf = tempfile.NamedTemporaryFile()
     for e in trim_array:
         ss, d = e.split(",")
-        s3path = generate_s3_path(s3backet)
-        b = bytes(s3path + "," + ss + "," + "d" + "\n", encoding='utf-8', errors='replace'))
+        s3path = generate_s3_path(s3backet, "mp4")
+        b = bytes(s3path + "," + ss + "," + d + "\n", encoding='utf-8', errors='replace')
         tf.write(b)
         result_s3_path.append(s3path)
     tf.flush()
 
-    instruction_file_s3_path = generate_s3_path(s3backet)
-    bucket.upload_file(tf.name, instruction_file_s3_path)
+    instruction_file_s3_path = generate_s3_path(s3backet, "txt")
+    o = urlparse(instruction_file_s3_path)
+    # S3キーのみ指定
+    bucket.upload_file(tf.name, o.path[1:])
+
+    tf.close()
     return (instruction_file_s3_path, result_s3_path)
 
 

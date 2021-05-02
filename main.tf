@@ -83,7 +83,7 @@ resource "aws_batch_compute_environment" "video_transform_batch" {
 
 #ジョブキューの用意
 resource "aws_batch_job_queue" "video_transform_batch_queue" {
-  name                 = var.video_cut_job_queue_name
+  name                 = var.video_transform_job_queue_name
   state                = "ENABLED"
   priority             = 1
   compute_environments = [aws_batch_compute_environment.video_transform_batch.arn]
@@ -105,32 +105,18 @@ module "video_cut_job_definition" {
   )
 }
 
-#videocutジョブ定義
-# resource "aws_batch_job_definition" "video_cut_job_definition" {
-#   name = "video-cut-job-definition"
-#   type = "container"
-#   container_properties = templatefile("./video_cut_batch_container_definitions.tpl",
-#     {
-#       job_role_arn = module.iam_assumable_role_for_video_transform_batchjob.iam_role_arn,
-#       log_group = var.video_cut_job_log_group_name
-#     }
-#   )
-# }
-
-#videocutジョブのロググループ
-# resource "aws_cloudwatch_log_group" "video_cut_job_log_group" {
-#   name = var.video_cut_job_log_group_name
-# }
-
-#videocut ECR
-# resource "aws_ecr_repository" "video_cut_registory" {
-#   name                 = "video-cut"
-#   image_tag_mutability = "MUTABLE"
-
-#   image_scanning_configuration {
-#     scan_on_push = true
-#   }
-# }
+module "video_multicut_job_definition" {
+  source = "./modules/batch_job_modules"
+  job_name = var.video_multicut_job_defination_name
+  job_log_group_name = var.video_multicut_job_log_group_name
+  job_ecr_name = "video-multi-cut"
+  container_properties = templatefile("./video_multicut_batch_container_definitions.tpl",
+    {
+      job_role_arn = module.iam_assumable_role_for_video_transform_batchjob.iam_role_arn,
+      log_group = var.video_multicut_job_log_group_name
+    }
+  )
+}
 
 #AWS Batchサービスロール
 module "iam_assumable_role_for_aws_batch_service" {
