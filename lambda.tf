@@ -5,6 +5,7 @@ resource "aws_lambda_function" "video_cut_submitjob_lambda" {
   role          = module.iam_assumable_role_for_video_transform_submitjob_lambda.iam_role_arn
   handler       = "main.lambda_handler"
   source_code_hash = data.archive_file.video_cut_submitjob_batch.output_base64sha256
+  timeout = 500
 
   runtime = "python3.8"
 
@@ -33,6 +34,7 @@ resource "aws_lambda_function" "video_multicut_submitjob_lambda" {
   role          = module.iam_assumable_role_for_video_transform_submitjob_lambda.iam_role_arn
   handler       = "main.lambda_handler"
   source_code_hash = data.archive_file.video_multicut_submitjob_batch.output_base64sha256
+  timeout = 500
 
   runtime = "python3.8"
 
